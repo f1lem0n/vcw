@@ -1,0 +1,28 @@
+import datetime
+
+configfile: config["root_dir"] + "workflow/configs/params.yaml"
+
+current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+
+rule all:
+    input:
+        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3"
+
+rule combine_audio:
+    input:
+        config["working_dir"] + "input/audio/"
+    output:
+        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3"
+    log:
+        config["working_dir"] + "logs/combine_audio/" + current_datetime + ".log"
+    benchmark:
+        config["working_dir"] + "benchmark/combine_audio/" + current_datetime + ".txt"
+    params:
+        script = config["root_dir"] + "workflow/scripts/combine_audio.py",
+        target_length = config["target_length"]
+    conda:
+        config["root_dir"] + "envs/combine_audio.yaml"
+    shell:
+        """
+        python3 {params.script} {input} {params.target_length} {output} &> {log}
+        """

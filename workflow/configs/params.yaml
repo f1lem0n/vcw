@@ -1,2 +1,3 @@
 working_dir: /mnt/e/youtube/euphoniae/
-target_length: 300
+target_length: 3600
+framerate: 24

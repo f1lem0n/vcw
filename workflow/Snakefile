@@ -6,7 +6,9 @@ current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
 rule all:
     input:
-        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3"
+        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
+        config["working_dir"] + "output/tracklists/" + current_datetime + ".txt",
+        config["working_dir"] + "output/video/" + current_datetime + ".mp4"
 
 rule combine_audio:
     """
@@ -30,4 +32,28 @@ rule combine_audio:
         """
         python3 {params.script} {input} {params.target_length} \
         {output.combined_audio} {output.tracklist} &> {log}
+        """
+
+rule create_video:
+    """
+    Create a video from the combined audio and random image.
+    """
+    input:
+        audio=rules.combine_audio.output.combined_audio,
+        images_path=config["working_dir"] + "input/images/"
+    output:
+        config["working_dir"] + "output/video/" + current_datetime + ".mp4"
+    log:
+        config["working_dir"] + "logs/create_video/" + current_datetime + ".log"
+    benchmark:
+        config["working_dir"] + "benchmark/create_video/" + current_datetime + ".txt"
+    params:
+        script = config["root_dir"] + "workflow/scripts/create_video.py",
+        framerate = config["framerate"]
+    conda:
+        config["root_dir"] + "envs/create_video.yaml"
+    shell:
+        """
+        python3 {params.script} {input.images_path} {input.audio} \
+        {params.framerate} {output} &> {log}
         """

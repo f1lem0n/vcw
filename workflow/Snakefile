@@ -9,10 +9,14 @@ rule all:
         config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3"
 
 rule combine_audio:
+    """
+    Combine audio files into one file and get the tracklist.
+    """
     input:
         config["working_dir"] + "input/audio/"
     output:
-        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3"
+        combined_audio=config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
+        tracklist=config["working_dir"] + "output/tracklists/" + current_datetime + ".txt"
     log:
         config["working_dir"] + "logs/combine_audio/" + current_datetime + ".log"
     benchmark:
@@ -24,5 +28,6 @@ rule combine_audio:
         config["root_dir"] + "envs/combine_audio.yaml"
     shell:
         """
-        python3 {params.script} {input} {params.target_length} {output} &> {log}
+        python3 {params.script} {input} {params.target_length} \
+        {output.combined_audio} {output.tracklist} &> {log}
         """

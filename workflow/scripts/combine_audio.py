@@ -1,9 +1,25 @@
+from datetime import timedelta
 import pathlib
 import sys
 import random
 
 from mutagen.mp3 import MP3
 from pydub import AudioSegment
+
+
+def get_tracklist_record(audio_file, total_length):
+    """
+    get tracklist record from audio file
+    """
+    timestamp = str(timedelta(seconds=total_length)).split(".")[0]
+    title = audio_file.name.split("-")[1].replace(".mp3", "")
+    artist = audio_file.name.split("-")[0]
+    if artist.endswith(" "):
+        artist = artist[:-1]
+    if "_" in title:
+        title = title.replace("_", ",")
+    tracklist_record = f"{timestamp} {title} ({artist})"
+    return tracklist_record
 
 
 def get_files_to_combine(
@@ -14,19 +30,21 @@ def get_files_to_combine(
     """
     try:
         audio_files = list(audio_path.iterdir())
+        tracklist = []
         files_to_combine = []
         total_length = 0
         while total_length < target_length:
             audio_file = random.choice(audio_files)
             print("processing:", audio_file.absolute())
             audio_length = MP3(audio_file).info.length
-            total_length += audio_length
             files_to_combine.append(audio_file)
+            tracklist.append(get_tracklist_record(audio_file, total_length))
             audio_files.remove(audio_file)  # avoid duplicates
+            total_length += audio_length + 3
     except IndexError:
         print("ERROR: Not enough unique audio files to reach target length.")
         exit(1)
-    return files_to_combine
+    return files_to_combine, tracklist
 
 
 def combine_files(
@@ -35,7 +53,7 @@ def combine_files(
     combined_audio = AudioSegment.empty()
     for file in files_to_combine:
         audio = AudioSegment.from_mp3(file)
-        combined_audio += audio
+        combined_audio += audio + AudioSegment.silent(duration=3)
     combined_audio.export(output_path, format="mp3")
 
 
@@ -43,7 +61,12 @@ if __name__ == "__main__":
     # assign args from command line
     audio_path = pathlib.Path(sys.argv[1]).absolute()
     target_length = int(sys.argv[2])
-    output_path = pathlib.Path(sys.argv[3]).absolute()
-    files_to_combine = get_files_to_combine(audio_path, target_length)
-    combine_files(files_to_combine, output_path)
+    audio_output = pathlib.Path(sys.argv[3]).absolute()
+    tracklist_output = pathlib.Path(sys.argv[4]).absolute()
+    files_to_combine, tracklist = get_files_to_combine(
+        audio_path, target_length
+    )
+    with open(tracklist_output, "w") as f:
+        f.write("\n".join(tracklist))
+    combine_files(files_to_combine, audio_output)
     print("SUCCESS: Combined audio files.")

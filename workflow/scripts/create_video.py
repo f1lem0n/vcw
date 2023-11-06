@@ -13,11 +13,13 @@ def get_random_image(images_path: Path) -> Path:
     (max width, centered vertically) and then rescale it to 4k
     """
     image_files = list(images_path.iterdir())
+
     if 20 > len(image_files) > 0:
         print("WARNING: You have less than 20 images in your images directory.")
     elif len(image_files) == 0:
         print("ERROR: You have no images left in your images directory.")
         sys.exit(1)
+
     image_path = random.choice(image_files).absolute()
     image = Image.open(image_path)
 
@@ -37,9 +39,7 @@ def get_random_image(images_path: Path) -> Path:
     return image_path
 
 
-def create_video(
-    image: Path, music_path: Path, framerate: int, output_path: Path
-) -> None:
+def create_video(image: Path, music_path: Path, output_path: Path) -> None:
     """
     Create a video from a random image and an audio file
     """
@@ -53,9 +53,9 @@ if __name__ == "__main__":
     # assign args from command line
     images_path = Path(sys.argv[1]).absolute()
     music_path = Path(sys.argv[2]).absolute()
-    framerate = int(sys.argv[3])
     output_path = Path(sys.argv[4]).absolute()
 
     selected_image = get_random_image(images_path)
-    create_video(selected_image, music_path, framerate, output_path)
-    selected_image.unlink()
+    create_video(selected_image, music_path, output_path)
+    # selected_image.unlink()  # delete the image after creating the video
+    print("SUCCESS: Created a video.")

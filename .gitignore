@@ -1,6 +1,7 @@
 # Custom
 .snakemake/
 .vscode/
+secrets/
 *.mp3
 *.mp4
 *.jpg

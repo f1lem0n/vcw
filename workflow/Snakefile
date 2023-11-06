@@ -20,7 +20,7 @@ rule combine_audio:
         combined_audio=config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
         tracklist=config["working_dir"] + "output/tracklists/" + current_datetime + ".txt"
     log:
-        config["working_dir"] + "logs/combine_audio/" + current_datetime + ".log"
+        config["working_dir"] + "log/combine_audio/" + current_datetime + ".log"
     benchmark:
         config["working_dir"] + "benchmark/combine_audio/" + current_datetime + ".txt"
     params:
@@ -44,7 +44,7 @@ rule create_video:
     output:
         config["working_dir"] + "output/video/" + current_datetime + ".mp4"
     log:
-        config["working_dir"] + "logs/create_video/" + current_datetime + ".log"
+        config["working_dir"] + "log/create_video/" + current_datetime + ".log"
     benchmark:
         config["working_dir"] + "benchmark/create_video/" + current_datetime + ".txt"
     params:

@@ -46,7 +46,7 @@ def get_files_to_combine(audio_path: Path, target_length: int) -> list[Path]:
 
 
 def combine_files(files_to_combine: list[Path], output_path: Path) -> None:
-    combined_audio = AudioSegment.empty()
+    combined_audio = AudioSegment.empty() + AudioSegment.silent(duration=3)
     for file in files_to_combine:
         audio = AudioSegment.from_mp3(file)
         combined_audio += audio + AudioSegment.silent(duration=3)

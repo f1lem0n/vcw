@@ -1,7 +1,9 @@
 # Custom
-working_dir/
 .snakemake/
 .vscode/
+*.mp3
+*.mp4
+*.jpg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

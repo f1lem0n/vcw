@@ -1,16 +1,37 @@
 from pathlib import Path
 import random
 import sys
+from PIL import Image
+
 
 from moviepy.editor import VideoFileClip, AudioFileClip
+import moviepy.video.fx.all as vfx
 
 
 def get_random_image(images_path: Path) -> Path:
     """
-    Get a random image from the images directory
+    Get a random image from the images directory, check if it's 16:9 and if it is,
+    then rescale it to 4k resolution, and if not crop the image to 16:9
+    (max width, centered vertically) and then rescale it to 4k
     """
     image_files = list(images_path.iterdir())
-    return random.choice(image_files).absolute()
+    image_path = random.choice(image_files).absolute()
+    image = Image.open(image_path)
+
+    width, height = image.size
+    aspect_ratio = width / height
+
+    if abs(aspect_ratio - 16 / 9) < 0.01:  # if the image is approximately 16:9
+        image = image.resize((3840, 2160))  # rescale to 4k
+    else:
+        new_height = width / 16 * 9
+        top = (height - new_height) / 2
+        image = image.crop((0, top, width, top + new_height))  # crop to 16:9
+        image = image.resize((3840, 2160))  # rescale to 4k
+
+    image.save(image_path)
+
+    return image_path
 
 
 def create_video(
@@ -19,8 +40,8 @@ def create_video(
     """
     Create a video from a random image and an audio file
     """
-    video_clip = VideoFileClip(str(image))
     audio_clip = AudioFileClip(str(music_path))
+    video_clip = VideoFileClip(str(image))
     final_clip = video_clip.set_audio(audio_clip)
     final_clip.write_videofile(str(output_path))
 

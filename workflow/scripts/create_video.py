@@ -3,9 +3,7 @@ import random
 import sys
 from PIL import Image
 
-
 from moviepy.editor import VideoFileClip, AudioFileClip
-import moviepy.video.fx.all as vfx
 
 
 def get_random_image(images_path: Path) -> Path:
@@ -15,6 +13,11 @@ def get_random_image(images_path: Path) -> Path:
     (max width, centered vertically) and then rescale it to 4k
     """
     image_files = list(images_path.iterdir())
+    if 20 > len(image_files) > 0:
+        print("WARNING: You have less than 20 images in your images directory.")
+    elif len(image_files) == 0:
+        print("ERROR: You have no images left in your images directory.")
+        sys.exit(1)
     image_path = random.choice(image_files).absolute()
     image = Image.open(image_path)
 
@@ -55,3 +58,4 @@ if __name__ == "__main__":
 
     selected_image = get_random_image(images_path)
     create_video(selected_image, music_path, framerate, output_path)
+    selected_image.unlink()

@@ -57,5 +57,5 @@ if __name__ == "__main__":
 
     selected_image = get_random_image(images_path)
     create_video(selected_image, music_path, output_path)
-    # selected_image.unlink()  # delete the image after creating the video
+    selected_image.unlink()  # delete the image after creating the video
     print("SUCCESS: Created a video.")

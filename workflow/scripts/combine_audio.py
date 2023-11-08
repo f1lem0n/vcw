@@ -38,7 +38,7 @@ def get_files_to_combine(audio_path: Path, target_length: int) -> list[Path]:
             files_to_combine.append(audio_file)
             tracklist.append(get_tracklist_record(audio_file, total_length))
             audio_files.remove(audio_file)  # avoid duplicates
-            total_length += audio_length + 3
+            total_length += audio_length + 2
     except IndexError:
         print("ERROR: Not enough unique audio files to reach target length.")
         exit(1)
@@ -51,8 +51,7 @@ def combine_files(files_to_combine: list[Path], output_path: Path) -> None:
         audio = AudioSegment.from_mp3(file)
         combined_audio += audio + AudioSegment.silent(duration=2000)
     normalized_audio = effects.normalize(combined_audio)
-    normalized_audio.frame_rate = 48000
-    normalized_audio.export(output_path, format="mp3", bitrate="320k")
+    normalized_audio.export(output_path, format="mp3")
 
 
 if __name__ == "__main__":

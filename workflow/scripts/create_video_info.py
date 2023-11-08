@@ -14,6 +14,7 @@ def create_description(
     description = template.format(tracklist=tracklist)
     with open(description_path, "w") as description_file:
         description_file.write(description)
+    print("SUCCESS: Description created.")
 
 
 def choose_title(titles_path, title_path):
@@ -31,6 +32,7 @@ def choose_title(titles_path, title_path):
         titles_file.writelines(titles)
     with open(title_path, "w") as title_file:
         title_file.write(title)
+    print("SUCCESS: Title chosen.")
 
 
 if __name__ == "__main__":

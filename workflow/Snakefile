@@ -72,9 +72,9 @@ rule create_video_info:
         description=config["working_dir"] + "output/description/" + current_datetime + ".txt",
         title=config["working_dir"] + "output/title/" + current_datetime + ".txt"
     log:
-        config["working_dir"] + "log/create_description/" + current_datetime + ".log"
+        config["working_dir"] + "log/create_video_info/" + current_datetime + ".log"
     benchmark:
-        config["working_dir"] + "benchmark/create_description/" + current_datetime + ".txt"
+        config["working_dir"] + "benchmark/create_video_info/" + current_datetime + ".txt"
     params:
         script = config["root_dir"] + "workflow/scripts/create_video_info.py",
     shell:

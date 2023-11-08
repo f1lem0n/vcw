@@ -45,8 +45,10 @@ def create_video(image: Path, music_path: Path, output_path: Path) -> None:
     """
     audio_clip = AudioFileClip(str(music_path))
     video_clip = VideoFileClip(str(image))
-    final_clip = video_clip.set_audio(audio_clip)
-    final_clip.write_videofile(str(output_path))
+    final_clip = video_clip.set_audio(audio_clip).set_duration(
+        audio_clip.duration
+    )
+    final_clip.write_videofile(str(output_path), fps=24)
 
 
 if __name__ == "__main__":

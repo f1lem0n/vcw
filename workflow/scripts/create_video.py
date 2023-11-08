@@ -53,7 +53,7 @@ if __name__ == "__main__":
     # assign args from command line
     images_path = Path(sys.argv[1]).absolute()
     music_path = Path(sys.argv[2]).absolute()
-    output_path = Path(sys.argv[4]).absolute()
+    output_path = Path(sys.argv[3]).absolute()
 
     selected_image = get_random_image(images_path)
     create_video(selected_image, music_path, output_path)

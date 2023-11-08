@@ -156,7 +156,7 @@ if __name__ == "__main__":
     )
     argparser.add_argument(
         "--category",
-        default="22",
+        default="10",
         help="Numeric video category. "
         + "See https://developers.google.com/youtube/v3/docs/videoCategories/list",
     )
@@ -213,3 +213,4 @@ if __name__ == "__main__":
         initialize_upload(youtube, args)
     except HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+        exit(1)

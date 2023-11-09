@@ -11,7 +11,9 @@ rule all:
         config["working_dir"] + "output/video/" + current_datetime + ".mp4",
         config["working_dir"] + "output/description/" + current_datetime + ".txt",
         config["working_dir"] + "output/title/" + current_datetime + ".txt",
-        config["working_dir"] + "output/uploaded/" + current_datetime + ".txt"
+
+if bool(config["upload"]):
+    rules.all.input.append(config["working_dir"] + "output/uploaded/" + current_datetime + ".txt")
 
 rule combine_audio:
     """

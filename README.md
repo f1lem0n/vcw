@@ -1,2 +1,2 @@
 # vcw
-Video creation workflow
+> Video creation workflow for randomized music playlist videos

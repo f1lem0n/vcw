@@ -3,17 +3,25 @@ import datetime
 configfile: config["root_dir"] + "workflow/configs/params.yaml"
 
 current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+# current_datetime = "2023-11-09_103011"  # set to the last generated video (for upload only)
 
-rule all:
-    input:
-        config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
-        config["working_dir"] + "output/tracklist/" + current_datetime + ".txt",
-        config["working_dir"] + "output/video/" + current_datetime + ".mp4",
-        config["working_dir"] + "output/description/" + current_datetime + ".txt",
-        config["working_dir"] + "output/title/" + current_datetime + ".txt",
-
-if bool(config["upload"]):
-    rules.all.input.append(config["working_dir"] + "output/uploaded/" + current_datetime + ".txt")
+if config["upload"]:
+    rule all:
+        input:
+            config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
+            config["working_dir"] + "output/tracklist/" + current_datetime + ".txt",
+            config["working_dir"] + "output/video/" + current_datetime + ".mp4",
+            config["working_dir"] + "output/description/" + current_datetime + ".txt",
+            config["working_dir"] + "output/title/" + current_datetime + ".txt",
+            config["working_dir"] + "output/uploaded/" + current_datetime + ".txt"
+else:
+    rule all:
+        input:
+            config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
+            config["working_dir"] + "output/tracklist/" + current_datetime + ".txt",
+            config["working_dir"] + "output/video/" + current_datetime + ".mp4",
+            config["working_dir"] + "output/description/" + current_datetime + ".txt",
+            config["working_dir"] + "output/title/" + current_datetime + ".txt",
 
 rule combine_audio:
     """

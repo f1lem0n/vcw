@@ -3,6 +3,7 @@
 .vscode/
 secrets/
 output/
+soundfonts/
 *.mp3
 *.mp4
 *.jpg

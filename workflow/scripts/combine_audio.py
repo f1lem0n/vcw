@@ -12,13 +12,8 @@ def get_tracklist_record(audio_file, total_length):
     get tracklist record from audio file
     """
     timestamp = str(timedelta(seconds=total_length)).split(".")[0]
-    title = audio_file.name.split(" - ")[1].replace(".mp3", "")
-    artist = audio_file.name.split(" - ")[0]
-    if artist.endswith(" "):
-        artist = artist[:-1]
-    if "_" in title:
-        title = title.replace("_", ",")
-    tracklist_record = f"{timestamp} {title} ({artist})"
+    title = Path(audio_file).stem
+    tracklist_record = f"{timestamp} {title}"
     return tracklist_record
 
 

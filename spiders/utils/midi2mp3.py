@@ -13,7 +13,7 @@ except IndexError:
 log = ""
 try:
     for f in files:
-        if f.suffix != ".mid":
+        if Path(f).suffix != ".mid":
             continue
         if Path(output_dir / f"{f.stem}.mp3").exists():
             continue

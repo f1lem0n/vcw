@@ -2,6 +2,7 @@
 .snakemake/
 .vscode/
 secrets/
+output/
 *.mp3
 *.mp4
 *.jpg

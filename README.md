@@ -43,7 +43,10 @@ working_dir
     └── titles.txt
 ```
 
-Remember to put `{tracklist}` keyword into your description template
+Obviously, you will need some more audio and image files.
+Please mind that after the video is created, the used image is deleted
+to prevent using the same image for 2 different videos.
+Also remember to put `{tracklist}` keyword into your description template
 as this will be used to create a custom description for the video containing the tracklist.
 
 ## Usage

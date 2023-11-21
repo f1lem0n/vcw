@@ -4,6 +4,7 @@
 secrets/
 output/
 soundfonts/
+params.yaml
 *.mp3
 *.mp4
 *.jpg

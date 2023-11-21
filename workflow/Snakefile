@@ -125,7 +125,7 @@ rule upload_video:
         --description="$(cat {input.description})" \
         --keywords="$(cat {input.keywords})" \
         --category="10" \
-        --privacyStatus="public" \
+        --privacyStatus="private" \
         --noauth_local_webserver &> {log}
         touch {output}
         """

@@ -57,6 +57,6 @@ class MidiworldSpider(scrapy.Spider):
         midi_for_curl = zip(midi_urls, formatted_midi_names)
         for url, name in midi_for_curl:
             if not Path(f"output/midis/{name}.mid").exists():
-                cmd = (f"curl {url} -o \"output/midis/{name}.mid\"")
+                cmd = f'curl {url} -o "output/midis/{name}.mid"'
                 print(cmd)
                 os.system(cmd)

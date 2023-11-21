@@ -2,13 +2,15 @@ from pathlib import Path
 import httplib2
 import os
 import random
-import sys
 import time
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
-from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import (
+    flow_from_clientsecrets,
+    HttpAccessTokenRefreshError,
+)
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 
@@ -149,7 +151,9 @@ if __name__ == "__main__":
     argparser.add_argument(
         "--secrets_path", required=True, help="Path to all secret files"
     )
-    argparser.add_argument("--file", required=True, help="Video file to upload")
+    argparser.add_argument(
+        "--file", required=True, help="Video file to upload"
+    )
     argparser.add_argument("--title", help="Video title", default="Test Title")
     argparser.add_argument(
         "--description", help="Video description", default="Test Description"
@@ -213,4 +217,10 @@ if __name__ == "__main__":
         initialize_upload(youtube, args)
     except HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+        exit(1)
+    except HttpAccessTokenRefreshError:
+        print("Access token has expired. Try refreshing the token: ")
+        print(
+            "\n\tvcw.py refresh --account <account_name> [--secrets_path <secrets_path>]\n"
+        )
         exit(1)

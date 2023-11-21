@@ -1,11 +1,14 @@
 import datetime
 
+
 configfile: config["root_dir"] + "workflow/configs/params.yaml"
 
+
 current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
-# current_datetime = "2023-11-09_103011"  # set to the last generated video (for upload only)
+
 
 if config["upload"]:
+
     rule all:
         input:
             config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
@@ -13,8 +16,10 @@ if config["upload"]:
             config["working_dir"] + "output/video/" + current_datetime + ".mp4",
             config["working_dir"] + "output/description/" + current_datetime + ".txt",
             config["working_dir"] + "output/title/" + current_datetime + ".txt",
-            config["working_dir"] + "output/uploaded/" + current_datetime + ".txt"
+            config["working_dir"] + "output/uploaded/" + current_datetime + ".txt",
+
 else:
+
     rule all:
         input:
             config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
@@ -22,23 +27,30 @@ else:
             config["working_dir"] + "output/video/" + current_datetime + ".mp4",
             config["working_dir"] + "output/description/" + current_datetime + ".txt",
             config["working_dir"] + "output/title/" + current_datetime + ".txt",
+
 
 rule combine_audio:
     """
     Combine audio files into one file and get the tracklist.
     """
     input:
-        config["working_dir"] + "input/audio/"
+        config["working_dir"] + "input/audio/",
     output:
-        combined_audio=config["working_dir"] + "output/combined_audio/" + current_datetime + ".mp3",
-        tracklist=config["working_dir"] + "output/tracklist/" + current_datetime + ".txt"
+        combined_audio=config["working_dir"]
+        + "output/combined_audio/"
+        + current_datetime
+        + ".mp3",
+        tracklist=config["working_dir"]
+        + "output/tracklist/"
+        + current_datetime
+        + ".txt",
     log:
-        config["working_dir"] + "log/combine_audio/" + current_datetime + ".log"
+        config["working_dir"] + "log/combine_audio/" + current_datetime + ".log",
     benchmark:
         config["working_dir"] + "benchmark/combine_audio/" + current_datetime + ".txt"
     params:
-        script = config["root_dir"] + "workflow/scripts/combine_audio.py",
-        target_length = config["target_length"]
+        script=config["root_dir"] + "workflow/scripts/combine_audio.py",
+        target_length=config["target_length"],
     conda:
         config["root_dir"] + "envs/combine_audio.yaml"
     shell:
@@ -47,21 +59,22 @@ rule combine_audio:
         {output.combined_audio} {output.tracklist} &> {log}
         """
 
+
 rule create_video:
     """
     Create a video from the combined audio and random image.
     """
     input:
         audio=rules.combine_audio.output.combined_audio,
-        images_path=config["working_dir"] + "input/images/"
+        images_path=config["working_dir"] + "input/images/",
     output:
-        config["working_dir"] + "output/video/" + current_datetime + ".mp4"
+        config["working_dir"] + "output/video/" + current_datetime + ".mp4",
     log:
-        config["working_dir"] + "log/create_video/" + current_datetime + ".log"
+        config["working_dir"] + "log/create_video/" + current_datetime + ".log",
     benchmark:
         config["working_dir"] + "benchmark/create_video/" + current_datetime + ".txt"
     params:
-        script = config["root_dir"] + "workflow/scripts/create_video.py",
+        script=config["root_dir"] + "workflow/scripts/create_video.py",
     conda:
         config["root_dir"] + "envs/create_video.yaml"
     shell:
@@ -70,6 +83,7 @@ rule create_video:
         {input.audio} {output} &> {log}
         """
 
+
 rule create_video_info:
     """
     Create the description and title for the YouTube video.
@@ -77,22 +91,31 @@ rule create_video_info:
     input:
         description_template=config["working_dir"] + "input/description_template.txt",
         tracklist=rules.combine_audio.output.tracklist,
-        titles=config["working_dir"] + "input/titles.txt"
+        titles=config["working_dir"] + "input/titles.txt",
     output:
-        description=config["working_dir"] + "output/description/" + current_datetime + ".txt",
-        title=config["working_dir"] + "output/title/" + current_datetime + ".txt"
+        description=config["working_dir"]
+        + "output/description/"
+        + current_datetime
+        + ".txt",
+        title=config["working_dir"] + "output/title/" + current_datetime + ".txt",
     log:
-        config["working_dir"] + "log/create_video_info/" + current_datetime + ".log"
+        config["working_dir"] + "log/create_video_info/" + current_datetime + ".log",
     benchmark:
-        config["working_dir"] + "benchmark/create_video_info/" + current_datetime + ".txt"
+        (
+            config["working_dir"]
+            + "benchmark/create_video_info/"
+            + current_datetime
+            + ".txt"
+        )
     params:
-        script = config["root_dir"] + "workflow/scripts/create_video_info.py",
+        script=config["root_dir"] + "workflow/scripts/create_video_info.py",
     shell:
         """
         python3 {params.script} {input.description_template} \
         {input.tracklist} {input.titles} {output.description} \
         {output.title} &> {log}
         """
+
 
 rule upload_video:
     """
@@ -102,19 +125,17 @@ rule upload_video:
         video=rules.create_video.output,
         title=rules.create_video_info.output.title,
         description=rules.create_video_info.output.description,
-        keywords=config["working_dir"] + "input/keywords.txt"
+        keywords=config["working_dir"] + "input/keywords.txt",
     output:
-        config["working_dir"] + "output/uploaded/" + current_datetime + ".txt"
+        config["working_dir"] + "output/uploaded/" + current_datetime + ".txt",
     log:
-        config["working_dir"] + "log/upload_video/" + current_datetime + ".log"
+        config["working_dir"] + "log/upload_video/" + current_datetime + ".log",
     benchmark:
         config["working_dir"] + "benchmark/upload_video/" + current_datetime + ".txt"
     params:
-        script = config["root_dir"] + "workflow/scripts/upload_video.py",
-        account = config["yt_account"],
-        secrets_path = config["root_dir"] + "workflow/secrets/"
-    conda:
-        config["root_dir"] + "envs/upload_video.yaml"
+        script=config["root_dir"] + "workflow/scripts/upload_video.py",
+        account=config["yt_account"],
+        secrets_path=config["root_dir"] + "workflow/secrets/",
     shell:
         """
         python3 {params.script} \

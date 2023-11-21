@@ -81,6 +81,65 @@ def run_workflow(cores, dryrun):
 
 
 @cli.command(
+    "upload",
+    context_settings=dict(ignore_unknown_options=True),
+    help="Refresh token and upload",
+)
+@click.option(
+    "--secrets_path",
+    "-s",
+    default=Path("workflow/secrets/").absolute(),
+    help="Path to all secret files",
+    required=True,
+)
+@click.option(
+    "--account",
+    "-a",
+    help="YouTube account name",
+    required=True,
+)
+@click.option(
+    "--refresh",
+    "-r", is_flag=True,
+    help="Refresh token",
+    default=False,
+)
+def refresh(secrets_path, account, refresh):
+    root_dir = Path(__file__).parent.absolute()
+    config_path = root_dir / "workflow/configs/params.yaml"
+    config = read_yaml_file(config_path)
+    last_run_date = list(
+        (Path(config["working_dir"]) / "output" / "video").iterdir()
+    )[-1].stem
+    if (Path(secrets_path) / f"{account}-oauth2.json").exists() and refresh:
+        (Path(secrets_path) / f"{account}-oauth2.json").unlink()
+    cmd = """python3 {script} \
+--yt_account="{account}" \
+--secrets_path="{secrets_path}" \
+--file="{video_path}" \
+--title="$(cat {title_path})" \
+--description="$(cat {description_path})" \
+--keywords="$(cat {keywords_path})" \
+--category="10" \
+--privacyStatus="private" \
+--noauth_local_webserver
+""".format(
+        script=f"{root_dir}/workflow/scripts/upload_video.py",
+        secrets_path=secrets_path,
+        account=account,
+        video_path=f"{config["working_dir"]}output/video/{last_run_date}.mp4",
+        title_path=f"{config["working_dir"]}output/title/{last_run_date}.txt",
+        description_path=f"{config["working_dir"]}output/description/{last_run_date}.txt",
+        keywords_path=f"{config["working_dir"]}input/keywords.txt",
+    )
+    subprocess.run(
+        cmd,
+        shell=True,
+    )
+
+
+
+@cli.command(
     "clean",
     context_settings=dict(ignore_unknown_options=True),
     help="Clean all redundant files",

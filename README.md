@@ -2,7 +2,7 @@
 > Workflow for automatically creating and uploading randomized music playlist videos to YouTube
 
 ## Disclaimer
-This workflow DOES NOT provide all the necessary tools to create libraries needed to run it. 
+This workflow DOES NOT provide all the necessary tools to create libraries needed to run it.
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ working_dir
     └── titles.txt
 ```
 
-Remember to put `{tracklist}` keyword into your description template 
+Remember to put `{tracklist}` keyword into your description template
 as this will be used to create a custom description for the video containing the tracklist.
 
 ## Usage
@@ -52,15 +52,15 @@ After activating vcw environment (`conda activate vcw`), view help:
 ```
 $ python vcw.py -h
 Usage: vcw.py [OPTIONS] COMMAND [ARGS]...
-  
+
     VCW is an automated tool for music playlist video creation
-  
+
   Options:
     -h, --help  Show this message and exit.
-  
+
   Commands:
     clean   Clean all redundant files
-    run     Run VCW 
+    run     Run VCW
     upload  Upload last video to YouTube
 ```
 
@@ -68,13 +68,13 @@ You can view more detailed help for every command by executing it with `-h` flag
 
 ## Spiders
 
-❗Most of the spiders are WORK IN PROGRESS, therefore they are not available yet.  
+❗Most of the spiders are WORK IN PROGRESS, therefore they are not available yet.
 
 Spiders are used to scrape the web for data (midis, mp3s, videos, pictures).
 Because spiders are not part of the workflow but an additional tools for data collection,
 they are not straightforward to use and require some programming knowledge.
 To use spiders you will need to set up the Scrapy environment: `conda env create -f envs/scrapy.yaml`.
-There are several utility scripts available at `spiders/utils`. 
+There are several utility scripts available at `spiders/utils`.
 You can use them by executing them with Python. Please note that some need additional dependencies.
 
 For more information please refer to [Scrapy documentation](https://docs.scrapy.org/en/latest/).

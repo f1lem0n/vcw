@@ -83,7 +83,7 @@ def run_workflow(cores, dryrun):
 @cli.command(
     "upload",
     context_settings=dict(ignore_unknown_options=True),
-    help="Refresh token and upload",
+    help="Upload last video to YouTube",
 )
 @click.option(
     "--secrets_path",

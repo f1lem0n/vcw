@@ -24,7 +24,7 @@ upload: True                        # choose if you want to upload the video aft
 working_dir: <path/to/working/dir>  # working dir should have a structure as described below
 
 target_length: <length>             # target video length in seconds
-                                    # e.g 3600 will result in video of length ABOUT 1 h
+                                    # e.g 3600 will result in video of length > 1 h
 ```
 
 HOW THE WORKING DIRECTORY SHOULD BE STRUCTURED INITIALLY:

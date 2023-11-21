@@ -2,7 +2,7 @@
 > Workflow for automatically creating and uploading randomized music playlist videos to YouTube
 
 ## Disclaimer
-This workflow DOES NOT provide all the necessary tools to create libraries needed to run it.
+This workflow DOES NOT provide all the necessary tools to create multimedia libraries needed to run it.
 
 ## Prerequisites
 

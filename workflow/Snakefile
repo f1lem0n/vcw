@@ -1,10 +1,14 @@
 import datetime
+import random
 
 
 configfile: config["root_dir"] + "workflow/configs/params.yaml"
 
 
 current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+
+mood, _ = glob_wildcards(config["working_dir"] + "input/audio/{mood}/{filename}.mp3")
+selected_mood = random.choice(list(set(mood)))
 
 
 if config["upload"]:
@@ -34,7 +38,7 @@ rule combine_audio:
     Combine audio files into one file and get the tracklist.
     """
     input:
-        config["working_dir"] + "input/audio/",
+        config["working_dir"] + "input/audio/" + selected_mood,
     output:
         combined_audio=config["working_dir"]
         + "output/combined_audio/"
@@ -66,7 +70,7 @@ rule create_video:
     """
     input:
         audio=rules.combine_audio.output.combined_audio,
-        images_path=config["working_dir"] + "input/images/",
+        images_path=config["working_dir"] + "input/images/" + selected_mood,
     output:
         config["working_dir"] + "output/video/" + current_datetime + ".mp4",
     log:
@@ -89,7 +93,10 @@ rule create_video_info:
     Create the description and title for the YouTube video.
     """
     input:
-        description_template=config["working_dir"] + "input/description_template.txt",
+        description_template=config["working_dir"]
+        + "input/description_templates/"
+        + selected_mood
+        + ".txt",
         tracklist=rules.combine_audio.output.tracklist,
         titles=config["working_dir"] + "input/titles.txt",
     output:
@@ -109,11 +116,13 @@ rule create_video_info:
         )
     params:
         script=config["root_dir"] + "workflow/scripts/create_video_info.py",
+        mood=selected_mood,
     shell:
         """
         python3 {params.script} {input.description_template} \
         {input.tracklist} {input.titles} {output.description} \
         {output.title} &> {log}
+        echo "MOOD: {params.mood}" >> {output.description}
         """
 
 
@@ -125,7 +134,7 @@ rule upload_video:
         video=rules.create_video.output,
         title=rules.create_video_info.output.title,
         description=rules.create_video_info.output.description,
-        keywords=config["working_dir"] + "input/keywords.txt",
+        keywords=config["working_dir"] + "input/keywords/" + selected_mood + ".txt",
     output:
         config["working_dir"] + "output/uploaded/" + current_datetime + ".txt",
     log:

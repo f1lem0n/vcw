@@ -2,3 +2,4 @@ use-conda: True
 conda-frontend: mamba
 nolock: True
 rerun-incomplete: True
+keep-going: True

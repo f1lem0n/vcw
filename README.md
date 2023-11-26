@@ -33,13 +33,25 @@ HOW THE WORKING DIRECTORY SHOULD BE STRUCTURED INITIALLY:
 working_dir
 └── input
     ├── audio
-    │   └── some_audio.mp3
-    ├── images
-    │   └── some_image.jpg
-    ├── soundfonts
-    │   └── some_soundfont.sf2
-    ├── description_template.txt
-    ├── keywords.txt
+    │   ├── mood1
+    │   │   ├── some_audio_file1.mp3
+    │   │   └── some_audio_file2.mp3
+    │   └── mood2
+    │       ├── some_audio_file1.mp3
+    │       └── some_audio_file2.mp3
+    ├── images
+    │   ├── mood1
+    │   │   ├── some_image_file1.mp3
+    │   │   └── some_image_file2.mp3
+    │   └── mood2
+    │       ├── some_image_file1.mp3
+    │       └── some_image_file2.mp3
+    ├── description_templates
+    │   ├── mood1.txt
+    │   └── mood2.txt
+    ├── keywords
+    │   ├── mood1.txt
+    │   └── mood2.txt
     └── titles.txt
 ```
 

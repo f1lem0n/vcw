@@ -122,7 +122,6 @@ rule create_video_info:
         python3 {params.script} {input.description_template} \
         {input.tracklist} {input.titles} {output.description} \
         {output.title} &> {log}
-        echo "MOOD: {params.mood}" >> {output.description}
         """
 
 
